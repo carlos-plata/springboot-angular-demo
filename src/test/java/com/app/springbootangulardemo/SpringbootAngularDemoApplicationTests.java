@@ -1,4 +1,4 @@
-package com.example.springbootangulardemo;
+package com.app.springbootangulardemo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

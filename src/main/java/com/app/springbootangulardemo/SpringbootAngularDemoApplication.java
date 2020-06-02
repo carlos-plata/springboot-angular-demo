@@ -1,4 +1,4 @@
-package com.example.springbootangulardemo;
+package com.app.springbootangulardemo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
