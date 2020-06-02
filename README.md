@@ -1,9 +1,11 @@
-# Spring boot and Angular Demo
+# Getting Started
+
+### Spring boot and Angular Demo
 
 Implementing a Reddit like app with Spring boot and Angular.
 
 
-# Technology Stack
+### Technology Stack
 
 Spring Security with JWT
 
