@@ -11,7 +11,7 @@ Spring Security with JWT
 
 Spring Data JPA
 
-MySQL
+H2 DB (in-memory for DEV purposes)
 
 Angular (8)
 
