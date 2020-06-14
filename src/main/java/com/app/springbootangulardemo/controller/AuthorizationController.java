@@ -3,6 +3,8 @@ package com.app.springbootangulardemo.controller;
 import static org.springframework.http.HttpStatus.OK;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +23,15 @@ public class AuthorizationController {
 	private final AuthorizacionService authorizacionService;
 
 	@PostMapping("/signup")
-	public ResponseEntity signup(@RequestBody RegisterRequest registerRequest) {
+	public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) {
 		authorizacionService.signup(registerRequest);
-		return new ResponseEntity(OK);
+		return new ResponseEntity<String>(OK);
+	}
+
+	@GetMapping("accountverification/(token}")
+	public ResponseEntity<String> verifyAccount(@PathVariable String token) {
+		authorizacionService.verifyAccount(token);
+		return new ResponseEntity<String>("Account Activated Successfuly.", OK);
 	}
 
 }
