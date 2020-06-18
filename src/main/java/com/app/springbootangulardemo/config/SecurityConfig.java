@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.app.springbootangulardemo.security.JWTAuthenticationFilter;
 
 import lombok.AllArgsConstructor;
 
@@ -18,6 +21,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final UserDetailsService userDetailsService;
+	private final JWTAuthenticationFilter jwtAuthenticationFilter;
 
 	@Bean(BeanIds.AUTHENTICATION_MANAGER)
 	@Override
@@ -31,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.authorizeRequests().antMatchers("/api/auth/**").permitAll().and().authorizeRequests()
 				.antMatchers("/h2/**").permitAll().anyRequest().authenticated().and().csrf().disable().headers()
 				.frameOptions().disable();
+		httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Autowired
