@@ -7,9 +7,16 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.app.springbootangulardemo.dto.AuthenticationResponse;
+import com.app.springbootangulardemo.dto.LoginRequest;
 import com.app.springbootangulardemo.dto.RegisterRequest;
 import com.app.springbootangulardemo.exception.SpringRedditException;
 import com.app.springbootangulardemo.model.NotificationEmail;
@@ -17,6 +24,7 @@ import com.app.springbootangulardemo.model.User;
 import com.app.springbootangulardemo.model.VerificationToken;
 import com.app.springbootangulardemo.repository.UserRepository;
 import com.app.springbootangulardemo.repository.VerificationTokenRepository;
+import com.app.springbootangulardemo.security.JWTProvider;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,17 +37,19 @@ import static com.app.springbootangulardemo.util.Constants.ACTIVATION_EMAIL;
 public class AuthorizacionService {
 
 	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
+	private final BCryptPasswordEncoder passwordEncoder;
 	private final VerificationTokenRepository verificationTokenRepository;
 	private final MailContentBuilder mailContentBuilder;
 	private final MailService mailService;
+	private final AuthenticationManager authenticationManager;
+	private final JWTProvider jwtProvider;
 
 	@Transactional
 	public void signup(RegisterRequest registerRequest) {
 		User user = new User();
 		user.setUserName(registerRequest.getUserName());
 		user.setEmail(registerRequest.getEmail());
-		user.setPassword(registerRequest.getPassword());
+		user.setPassword(encodePassword(registerRequest.getPassword()));
 		user.setCreated(now());
 		user.setEnabled(false);
 		userRepository.save(user);
@@ -77,6 +87,13 @@ public class AuthorizacionService {
 		user.setEnabled(true);
 		userRepository.save(user);
 
+	}
+
+	public AuthenticationResponse login(LoginRequest loginRequest) {
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		return new AuthenticationResponse(jwtProvider.generateToken(authentication), loginRequest.getUserName());
 	}
 
 }

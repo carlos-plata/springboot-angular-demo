@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.springbootangulardemo.dto.AuthenticationResponse;
+import com.app.springbootangulardemo.dto.LoginRequest;
 import com.app.springbootangulardemo.dto.RegisterRequest;
 import com.app.springbootangulardemo.service.AuthorizacionService;
 
@@ -32,6 +34,11 @@ public class AuthorizationController {
 	public ResponseEntity<String> verifyAccount(@PathVariable String token) {
 		authorizacionService.verifyAccount(token);
 		return new ResponseEntity<String>("Account Activated Successfuly.", OK);
+	}
+
+	@PostMapping("/login")
+	public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
+		return authorizacionService.login(loginRequest);
 	}
 
 }
