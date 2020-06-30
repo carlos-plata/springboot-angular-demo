@@ -2,6 +2,7 @@ package com.app.springbootangulardemo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -32,10 +33,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(HttpSecurity httpSecurity) throws Exception {
 
-		httpSecurity.authorizeRequests().antMatchers("/api/auth/**").permitAll().and().authorizeRequests()
-				.antMatchers("/h2/**").permitAll().anyRequest().authenticated().and().csrf().disable().headers()
-				.frameOptions().disable();
-		httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+		httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+				.authorizeRequests().antMatchers("/api/auth/**").permitAll().and().authorizeRequests()
+				.antMatchers("/api/subreddit**").fullyAuthenticated().and().authorizeRequests().antMatchers("/h2/**")
+				.permitAll().anyRequest().authenticated().and().csrf().disable().headers().frameOptions().disable();
+
 	}
 
 	@Autowired
