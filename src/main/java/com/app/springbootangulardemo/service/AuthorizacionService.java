@@ -76,15 +76,14 @@ public class AuthorizacionService {
 
 	public void verifyAccount(String token) {
 		Optional<VerificationToken> verificationTokenOptional = verificationTokenRepository.findByToken(token);
-		verificationTokenOptional.orElseThrow(() -> new SpringRedditException("Invalid Token"));
-		fetchUserAndEnable(verificationTokenOptional.get());
+		fetchUserAndEnable(verificationTokenOptional.orElseThrow(() -> new SpringRedditException("Invalid Token")));
 	}
 
 	@Transactional
 	private void fetchUserAndEnable(VerificationToken verificationToken) {
 		String username = verificationToken.getUser().getUserName();
 		User user = userRepository.findByUserName(username)
-				.orElseThrow(() -> new SpringRedditException("User Not Found with id - " + username));
+				.orElseThrow(() -> new SpringRedditException("User Not Found with name - " + username));
 		user.setEnabled(true);
 		userRepository.save(user);
 
@@ -97,11 +96,17 @@ public class AuthorizacionService {
 		return new AuthenticationResponse(jwtProvider.generateToken(authentication), loginRequest.getUserName());
 	}
 
+	@org.springframework.transaction.annotation.Transactional(readOnly = true)
 	public User getCurrentUser() {
 		org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
 		return userRepository.findByUserName(principal.getUsername())
 				.orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
+	}
+
+	public boolean isLoggedIn() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

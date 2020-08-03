@@ -37,7 +37,7 @@ public class SubredditService {
 
 	public SubredditDto getSubreddit(Long id) {
 		Subreddit subreddit = subredditRepository.findById(id)
-				.orElseThrow(() -> new SubredditNotFoundException("Subreddit not found with id -" + id));
+				.orElseThrow(() -> new SubredditNotFoundException("No Subreddit found with ID -" + id));
 		return subredditMapper.mapSubredditToDto(subreddit);
 	}
 
