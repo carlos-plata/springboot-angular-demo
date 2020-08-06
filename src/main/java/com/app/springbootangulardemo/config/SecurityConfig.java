@@ -35,7 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests().antMatchers("/api/auth/**").permitAll().and().authorizeRequests()
-				.antMatchers("/api/subreddit**").fullyAuthenticated().and().authorizeRequests().antMatchers("/h2/**")
+				.antMatchers("/api/subreddit**").fullyAuthenticated().and().authorizeRequests()
+				.antMatchers("/api/posts**").fullyAuthenticated().and().authorizeRequests().antMatchers("/h2/**")
 				.permitAll().anyRequest().authenticated().and().csrf().disable().headers().frameOptions().disable();
 
 	}
